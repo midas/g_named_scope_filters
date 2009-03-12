@@ -1,32 +1,86 @@
 = g_named_scope_filters
 
-* FIX (url)
+http://github.com/midas/g_named_scope_filters/tree/master
+
 
 == DESCRIPTION:
 
-FIX (describe your package)
+This is an unordered list of filters that use named scopes within an ActiveRecord model
+to filter a list.  It is not tied to a table or list specifically as it simply manipulates the url, resulting 
+in a manipulation of any collection (list, table, etc.) it may be coupled with.
 
-== FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+== FEATURES
 
-== SYNOPSIS:
+* Generates unordered list of links that will filter based on defined named scopes in an ActiveRecord model
 
-  FIX (code sample of usage)
+
+== PLANNED FEATURES
+
+* Automatically use all named scopes defined in model if :only or :except options are not used
+* Obey the :except option if :only option not present
+
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* Rails >= 2.2.0
+* Guilded >= 0.0.8 (http://github.com/midas/guilded/tree/master)
+
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+  sudo gem install midas-g_named_scope_filters
 
+In your Rails environment.rb file:
+
+  config.gem 'midas-g_named_scope_filters', :version => '1.0.0', :lib => 'g_named_scope_filters', :source => 'http://gems.github.com'
+
+
+== USAGE:
+
+Model:
+
+	class Item < ActiveRecord::Base
+		named_scope :recent, lambda { { :conditions => [ "date_of_offense BETWEEN ? AND ?", 
+	    31.days.ago.utc, Time.zone.now.end_of_day.utc ] } }
+		named_scope :inactive, :conditions => { :is_active => false }
+	end
+
+View:
+  <%= g_named_scope_filters Item, :only => [:recent, :inactive], :scoped_by => @account, :include_count => true, 
+        :id => 'item_filters' %>
+
+You currently must use the :only option to specify which named scopes to use.  It is planned to use all named scopes if
+:only or :except are not present, however it is not yet implemented.
+
+Results in:
+
+  <ul id="doc-filters" class="filters">
+    <li>
+      <a class="selected" href="/accounts/2/items">
+        All
+        <span>2</span>
+      </a>
+    </li>
+    <li>
+      <a class="" href="/accounts/2/items?filter=recent">
+				Recent
+        <span>1</span>
+      </a>
+    </li>
+    <li>
+      <a class="" href="/accounts/2/items?filter=inactive">
+				Inactive
+        <span>0</span>
+      </a>
+    </li>
+  </ul>
+	
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2009 FIXME full name
+Copyright (c) 2009 C. Jason Harrelson (midas)
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

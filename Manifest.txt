@@ -3,7 +3,9 @@ Manifest.txt
 PostInstall.txt
 README.rdoc
 Rakefile
+g_named_scope_filters.gemspec
 lib/g_named_scope_filters.rb
+lib/g_named_scope_filters/view_helpers.rb
 script/console
 script/destroy
 script/generate
