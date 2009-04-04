@@ -35,7 +35,7 @@ In your Rails environment.rb file:
 
   config.gem 'midas-g_named_scope_filters', :version => '1.0.0', :lib => 'g_named_scope_filters', :source => 'http://gems.github.com'
 
-
+	
 == USAGE:
 
 Model:
