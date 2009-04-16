@@ -1,3 +1,7 @@
+== 1.0.1 2009-04-16
+
+* Added namespace option
+
 == 1.0.0 2009-03-12
 
 * Initial release (ported from plugin)
