@@ -41,9 +41,9 @@ module GNamedScopeFilters
       end
       options[:filters] = filters
 
-      scoped_by = options[:scoped_by] #options.delete( :scoped_by )
-      polymorphic_type = options[:polymorphic_type] #options.delete( :polymorphic_type ).to_s if options.has_key?( :polymorphic_type )
-      polymorphic_as = options[:polymorphic_as] #options.delete( :polymorphic_as ).to_s if options.has_key?( :polymorphic_as )
+      scoped_by = options[:scoped_by]
+      polymorphic_type = options[:polymorphic_type]
+      polymorphic_as = options[:polymorphic_as]
 
       raise "You must provide the 'polymorphic_as' option if you provide the 'polymorphic_type' option." if polymorphic_type && !polymorphic_as
 
@@ -63,18 +63,16 @@ module GNamedScopeFilters
 
       path_helpers = Guilded::Rails::Helpers.resolve_rest_path_helpers( ar_obj_col_or_class, options )
       list_path_helper = path_helpers[:index_rest_helper]
-      #if options[:list_path_helper]
-      #  list_path_helper = options[:list_path_helper].to_s
-      #elsif scoped_by
-      #  list_path_helper = "#{scoped_by.class.to_s.underscore}_#{klass.to_s.tableize}_path"
-      #else
-      #  list_path_helper = "#{klass.to_s.tableize}_path"
-      #end
 
       html = ''
 
       return html if filters.empty?
 
+      # Resolve scoped by if it is an array
+      if scoped_by.is_a?( Array )
+        scoped_by = scoped_by.last
+      end
+      
       html << "<ul id=\"#{options[:id].to_s}\" class=\"#{options[:class].to_s}\">"
 
       # Handle the all filter
