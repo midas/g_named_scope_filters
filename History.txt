@@ -8,9 +8,11 @@
 
 * Fixed bug with resources scoped more than 1 level deep
 
+
 == 1.0.1 2009-04-16
 
 * Added namespace option
+
 
 == 1.0.0 2009-03-12
 

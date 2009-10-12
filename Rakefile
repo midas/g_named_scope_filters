@@ -1,30 +1,51 @@
-%w[rubygems rake rake/clean fileutils newgem rubigen].each { |f| require f }
-require File.dirname(__FILE__) + '/lib/g_named_scope_filters'
+require 'rubygems'
+require 'rake'
 
-# Generate all the Rake tasks
-# Run 'rake -T' to see list of generated tasks (from gem root directory)
-$hoe = Hoe.new('g_named_scope_filters', GNamedScopeFilters::VERSION) do |p|
-  p.developer('C. Jason Harrelson (midas)', 'jason@lookforwardenterprises.com')
-  p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
-  p.post_install_message = 'PostInstall.txt' # TODO remove if post-install message not required
-  p.rubyforge_name       = p.name # TODO this is default value
-  # p.extra_deps         = [
-  #   ['activesupport','>= 2.0.2'],
-  # ]
-  p.extra_dev_deps = [
-    ['newgem', ">= #{::Newgem::VERSION}"],
-    ['rails', ">= 2.2.0"],
-    ['midas-guilded', ">=0.0.6"]
-  ]
-  
-  p.clean_globs |= %w[**/.DS_Store tmp *.log]
-  path = (p.rubyforge_name == p.name) ? p.rubyforge_name : "\#{p.rubyforge_name}/\#{p.name}"
-  p.remote_rdoc_dir = File.join(path.gsub(/^#{p.rubyforge_name}\/?/,''), 'rdoc')
-  p.rsync_args = '-av --delete --ignore-errors'
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = "g_named_scope_filters"
+    gem.summary = %Q{A UI component that generates an unordered list of filters that use named scopes within an ActiveRecord model to filter a list.}
+    gem.description = %Q{A UI component that generates an unordered list of filters that use named scopes within an ActiveRecord model to filter a list.  It is not tied to a table or list specifically as it simply manipulates the url, resulting  in a manipulation of any collection (list, table, etc.) it may be coupled with.}
+    gem.email = "jason@lookforwardenterprises.com"
+    gem.homepage = "http://github.com/midas/test"
+    gem.authors = ["C. Jason Harrelson (midas)"]
+    gem.add_development_dependency "rspec", ">=1.2.8"
+    gem.add_dependency 'rails', ">= 2.2.0"
+    gem.add_dependency 'midas-guilded', ">=0.3.0"
+    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+  end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-require 'newgem/tasks' # load /tasks/*.rake
-Dir['tasks/**/*.rake'].each { |t| load t }
+require 'spec/rake/spectask'
+Spec::Rake::SpecTask.new(:spec) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.spec_files = FileList['spec/**/*_spec.rb']
+end
 
-# TODO - want other tests/tasks run by default? Add them to the list
-# task :default => [:spec, :features]
+Spec::Rake::SpecTask.new(:rcov) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
+end
+
+task :spec => :check_dependencies
+
+task :default => :spec
+
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  if File.exist?('VERSION')
+    version = File.read('VERSION')
+  else
+    version = ""
+  end
+
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title = "test #{version}"
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
