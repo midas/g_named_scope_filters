@@ -29,7 +29,11 @@ any collection (list, table, etc.) it may be coupled with.
 
 == INSTALL:
 
+Update your RubyGem sources to include gemcutter if it is not already:
+
   gem sources -a http://gemcutter.org
+
+Install:
 
   sudo gem install g_named_scope_filters
 
