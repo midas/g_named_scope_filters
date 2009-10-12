@@ -5,7 +5,7 @@ http://github.com/midas/g_named_scope_filters/tree/master
 
 == DESCRIPTION:
 
-This is an unordered list of filters that use named scopes within an ActiveRecord model
+An unordered list of filters that use named scopes within an ActiveRecord model
 to filter a list.  It is not tied to a table or list specifically as it simply manipulates the url, resulting 
 in a manipulation of any collection (list, table, etc.) it may be coupled with.
 
@@ -40,11 +40,11 @@ In your Rails environment.rb file:
 
 Model:
 
-	class Item < ActiveRecord::Base
-		named_scope :recent, lambda { { :conditions => [ "date_of_offense BETWEEN ? AND ?", 
-	    31.days.ago.utc, Time.zone.now.end_of_day.utc ] } }
-		named_scope :inactive, :conditions => { :is_active => false }
-	end
+  class Item < ActiveRecord::Base
+    named_scope :recent, lambda { { :conditions => [ "date_of_offense BETWEEN ? AND ?", 
+      31.days.ago.utc, Time.zone.now.end_of_day.utc ] } }
+    named_scope :inactive, :conditions => { :is_active => false }
+  end
 
 View:
   <%= g_named_scope_filters Item, :only => [:recent, :inactive], :scoped_by => @account, :include_count => true, 
@@ -64,13 +64,13 @@ Results in:
     </li>
     <li>
       <a class="" href="/accounts/2/items?filter=recent">
-				Recent
+        Recent
         <span>1</span>
       </a>
     </li>
     <li>
       <a class="" href="/accounts/2/items?filter=inactive">
-				Inactive
+        Inactive
         <span>0</span>
       </a>
     </li>
