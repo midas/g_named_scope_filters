@@ -4,7 +4,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 require 'g_named_scope_filters/view_helpers'
 
 module GNamedScopeFilters
-  VERSION = '1.0.3'
+  VERSION = '1.0.4'
 end
 
 if defined?( ActionView::Base )

@@ -75,6 +75,17 @@ Results in:
       </a>
     </li>
   </ul>
+
+In order to override how the counts are calculated, simply pass a hash into the g_named_scope_filters :record_counts 
+option:
+
+  <%= g_named_scope_filters Item, :only => [:recent, :inactive], :scoped_by => @account, :include_count => true, 
+        :record_counts => @record_counts, :id => 'item_filters' %>
+
+The hash should contain symbols and integers representing the filter name and the number of available records:
+
+  { :all => 4, :recent => 2, :inactive => 2 }
+
 	
 == LICENSE:
 

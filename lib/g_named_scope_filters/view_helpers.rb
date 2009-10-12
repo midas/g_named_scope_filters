@@ -44,6 +44,7 @@ module GNamedScopeFilters
       scoped_by = options[:scoped_by]
       polymorphic_type = options[:polymorphic_type]
       polymorphic_as = options[:polymorphic_as]
+      record_counts = options[:record_counts]
 
       raise "You must provide the 'polymorphic_as' option if you provide the 'polymorphic_type' option." if polymorphic_type && !polymorphic_as
 
@@ -79,7 +80,9 @@ module GNamedScopeFilters
       link_text = "All"
 
       if options[:include_count]
-        if scoped_by   
+        if record_counts
+          link_text << " <span>#{record_counts[:all]}</span>"
+        elsif scoped_by   
           if polymorphic_type
             poly_scoped_finder = polymorphic_type.to_s.tableize
             link_text << " <span>#{scoped_by.send( poly_scoped_finder.to_sym ).count}</span>"
@@ -92,8 +95,6 @@ module GNamedScopeFilters
         end
       end
 
-      #filter_options = {}
-      #filter_options.merge!( :order => params[:order] ) if params[:order]
       filter_options = Array.new
       filter_options.push( :order => params[:order] ) if params[:order]
 
@@ -107,24 +108,22 @@ module GNamedScopeFilters
 
         if options[:include_count]
 
-          if scoped_by
-
+          if record_counts
+            link_text << " <span>#{record_counts[filter.to_sym]}</span>"
+          elsif scoped_by
             scoped_finder = klass.to_s.tableize if scoped_finder.nil? || scoped_finder.empty?
 
             if polymorphic_type
-
               # If there is a named scope finder defined on the root klass that can get the 
-              # polymorpic assocaited objects, the use it
+              # polymorpic associated objects, the use it
               if klass.respond_to?( poly_scoped_finder )
                 link_text << " <span>#{scoped_by.send( scoped_finder.to_sym ).send( poly_scoped_finder.to_sym ).send( filter.to_sym ).count}</span>"
               else #otherwise, just use a AR's find
                 link_text << " <span>#{scoped_by.send( scoped_finder.to_sym ).send( filter.to_sym ).find(:all, :conditions => { "#{polymorphic_as}_type".to_sym => polymorphic_type } ).size}</span>"
               end
-
             else
               link_text << " <span>#{scoped_by.send( scoped_finder.to_sym ).send( filter.to_sym ).count}</span>"
             end
-
           else
             link_text << " <span>#{klass.send( filter.to_sym ).count}</span>"
           end
