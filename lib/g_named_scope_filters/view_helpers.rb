@@ -112,7 +112,7 @@ module GNamedScopeFilters
 
         html << "<li>"
         html << link_to( link_text, @controller.send( list_path_helper, *(path_helpers[:index_rest_args] + filter_options) ), 
-                  :class => "#{params[:filter].nil? ? options[:selected_class] : ''}" )
+                  :class => "#{params[:filter] == all_param.to_s ? options[:selected_class] : ''}" )
       end
 
       filters.each do |filter|
