@@ -17,6 +17,12 @@ module GNamedScopeFilters
     # +only+ - This is the filters to include.  Can be an array or string (for one filter).
     # +include_count+ - True if you would like a span created within each filter list item containg the count for
     #   items in that filter.
+    # +record_counts+ - A hash providing teh counts for each filter to override the built in counting funcitonality.
+    # +include_all+ - True if you want the all filter to be renderred, otherwise false.  Defaults to true.
+    # +all_label+ - The text to use for the All filter's label.  Defaults to 'All.'
+    # +all_param+ - The param to pass for the all filter.  Set to :none or false for no filter parameter added to URL 
+    #   when all selected.  Defaults to false.
+    # +filter_param_key+ - The key for the filter param.  Defaults to 'filter.'  ie. &filter=something
     # +scoped_by+ - This is the ActiveRecord object that this list is scoped by.  For instance, if an account
     #   has many users and this is the user list for said acccount, then you would use :scoped_by => @account.
     #   This will scope the user list with filter to that account.  It will also change the path helper from
@@ -45,7 +51,13 @@ module GNamedScopeFilters
       polymorphic_type = options[:polymorphic_type]
       polymorphic_as = options[:polymorphic_as]
       record_counts = options[:record_counts]
-
+      include_all = options[:include_all]
+      include_all = true unless include_all == false
+      all_label = options[:all_label] || 'All'
+      all_param = options[:all_param]
+      all_param = nil if all_param == :none || all_param == false
+      filter_param_key = options[:filter_param_key] || 'filter'
+      
       raise "You must provide the 'polymorphic_as' option if you provide the 'polymorphic_type' option." if polymorphic_type && !polymorphic_as
 
       Guilded::Guilder.instance.add( :named_scope_filters, options )
@@ -70,44 +82,44 @@ module GNamedScopeFilters
       return html if filters.empty?
 
       # Resolve scoped by if it is an array
-      if scoped_by.is_a?( Array )
-        scoped_by = scoped_by.last
-      end
+      scoped_by = scoped_by.last if scoped_by.is_a?( Array )
       
       html << "<ul id=\"#{options[:id].to_s}\" class=\"#{options[:class].to_s}\">"
 
       # Handle the all filter
-      link_text = "All"
+      if include_all
+        link_text = all_label
 
-      if options[:include_count]
-        if record_counts
-          link_text << " <span>#{record_counts[:all]}</span>"
-        elsif scoped_by   
-          if polymorphic_type
-            poly_scoped_finder = polymorphic_type.to_s.tableize
-            link_text << " <span>#{scoped_by.send( poly_scoped_finder.to_sym ).count}</span>"
+        if options[:include_count]
+          if record_counts
+            link_text << " <span>#{record_counts[:all]}</span>"
+          elsif scoped_by   
+            if polymorphic_type
+              poly_scoped_finder = polymorphic_type.to_s.tableize
+              link_text << " <span>#{scoped_by.send( poly_scoped_finder.to_sym ).count}</span>"
+            else
+              scoped_finder = klass.to_s.tableize
+              link_text << " <span>#{scoped_by.send( scoped_finder.to_sym ).count}</span>"
+            end
           else
-            scoped_finder = klass.to_s.tableize
-            link_text << " <span>#{scoped_by.send( scoped_finder.to_sym ).count}</span>"
+            link_text << " <span>#{klass.count}</span>" 
           end
-        else
-          link_text << " <span>#{klass.count}</span>" 
         end
+
+        filter_options = []
+        filter_options.push( :order => params[:order] ) if params[:order]
+        filter_options.push( filter_param_key.to_sym => all_param ) if all_param # Send a param for 'All' filter
+
+        html << "<li>"
+        html << link_to( link_text, @controller.send( list_path_helper, *(path_helpers[:index_rest_args] + filter_options) ), 
+                  :class => "#{params[:filter].nil? ? options[:selected_class] : ''}" )
       end
-
-      filter_options = Array.new
-      filter_options.push( :order => params[:order] ) if params[:order]
-
-      html << "<li>"
-      html << link_to( link_text, @controller.send( list_path_helper, *(path_helpers[:index_rest_args] + filter_options) ), 
-                :class => "#{params[:filter].nil? ? options[:selected_class] : ''}" )
 
       filters.each do |filter|
         throw "You must define a named scope of '#{filter.to_s}' in order to render a named scope filter for it" unless klass.respond_to?( filter.to_sym )
         link_text = filter.to_s.humanize
 
         if options[:include_count]
-
           if record_counts
             link_text << " <span>#{record_counts[filter.to_sym]}</span>"
           elsif scoped_by
@@ -127,19 +139,19 @@ module GNamedScopeFilters
           else
             link_text << " <span>#{klass.send( filter.to_sym ).count}</span>"
           end
-
         end
 
+        filter_options = []
         #filter_options.merge!( :filter => filter )
         if filter_options[filter_options.size-1].is_a?( Hash )
-          filter_options[filter_options.size-1].merge!( :filter => filter )
+          filter_options[filter_options.size-1].merge!( filter_param_key.to_sym => filter )
         else
-          filter_options.push( :filter => filter )
+          filter_options.push( filter_param_key.to_sym => filter )
         end
 
         html << "<li>"
         html << link_to( link_text, @controller.send( list_path_helper, *(path_helpers[:index_rest_args] + filter_options) ), 
-                :class => "#{params[:filter] == filter.to_s ? options[:selected_class] : ''}" )
+                  :class => "#{params[:filter] == filter.to_s ? options[:selected_class] : ''}" )
         html << "</li>"
       end
 
