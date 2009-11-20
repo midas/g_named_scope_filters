@@ -8,7 +8,7 @@ begin
     gem.summary = %Q{A UI component that generates an unordered list of filters that use named scopes within an ActiveRecord model to filter a list.}
     gem.description = %Q{A UI component that generates an unordered list of filters that use named scopes within an ActiveRecord model to filter a list.  It is not tied to a table or list specifically as it simply manipulates the url, resulting  in a manipulation of any collection (list, table, etc.) it may be coupled with.}
     gem.email = "jason@lookforwardenterprises.com"
-    gem.homepage = "http://github.com/midas/test"
+    gem.homepage = "http://github.com/midas/g_named_scope_filters"
     gem.authors = ["C. Jason Harrelson (midas)"]
     gem.add_development_dependency "rspec", ">=1.2.8"
     gem.add_dependency 'rails', ">= 2.2.0"
