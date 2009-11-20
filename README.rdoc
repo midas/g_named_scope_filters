@@ -24,7 +24,7 @@ any collection (list, table, etc.) it may be coupled with.
 == REQUIREMENTS:
 
 * Rails >= 2.2.0
-* Guilded >= 0.3.0 (http://github.com/midas/guilded/tree/master)
+* Guilded >= 1.0.0 (http://github.com/midas/guilded/tree/master)
 
 
 == INSTALL:
@@ -39,7 +39,7 @@ Install:
 
 In your Rails environment.rb file:
 
-  config.gem 'midas-g_named_scope_filters', :version => '1.0.0', :lib => 'g_named_scope_filters', :source => 'http://gems.github.com'
+  config.gem 'g_named_scope_filters', :version => '1.0.5', :source => 'http://gems.github.com'
 
 	
 == USAGE:
@@ -91,6 +91,8 @@ option:
 The hash should contain symbols and integers representing the filter name and the number of available records:
 
   { :all => 4, :recent => 2, :inactive => 2 }
+
+Check the documentation for the g_named_scope_filter method in ViewHelpers module for more options.
 
 	
 == LICENSE:

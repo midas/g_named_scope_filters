@@ -12,7 +12,7 @@ begin
     gem.authors = ["C. Jason Harrelson (midas)"]
     gem.add_development_dependency "rspec", ">=1.2.8"
     gem.add_dependency 'rails', ">= 2.2.0"
-    gem.add_dependency 'midas-guilded', ">=0.3.0"
+    gem.add_dependency 'guilded', ">=1.0.0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
