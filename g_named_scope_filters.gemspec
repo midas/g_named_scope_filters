@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{g_named_scope_filters}
-  s.version = "1.0.5"
+  s.version = "1.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["C. Jason Harrelson (midas)"]
-  s.date = %q{2009-11-19}
+  s.date = %q{2010-07-19}
   s.description = %q{A UI component that generates an unordered list of filters that use named scopes within an ActiveRecord model to filter a list.  It is not tied to a table or list specifically as it simply manipulates the url, resulting  in a manipulation of any collection (list, table, etc.) it may be coupled with.}
   s.email = %q{jason@lookforwardenterprises.com}
   s.extra_rdoc_files = [
@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/midas/g_named_scope_filters}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{A UI component that generates an unordered list of filters that use named scopes within an ActiveRecord model to filter a list.}
   s.test_files = [
     "spec/g_named_scope_filters_spec.rb",

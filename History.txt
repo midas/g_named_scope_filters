@@ -1,3 +1,7 @@
+== 1.0.5 2010-07-19
+
+* Fixed bug with the all filter selection when no all filter parameter name is specified.
+
 == 1.0.5 2009-11-19
 
 * Added options to control 'All' filter display, parameter and label.
@@ -6,7 +10,7 @@
 
 == 1.0.4 2009-10-11
 
-* Added ability to pass in record counts for the filters to override the control's way of calculating 
+* Added ability to pass in record counts for the filters to override the control's way of calculating
   the available record counts.
 
 
